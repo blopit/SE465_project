@@ -61,7 +61,8 @@ public class Parser {
     }
     public static void main(String[] args) {
         //Change the filename to any textfile location to test the parser
-        String fileName = "C:\\Users\\Jude\\Downloads\\main.txt";
+        String directory = System.getProperty("user.dir");
+        String fileName = directory + "\\main.txt";
         File file = new File(fileName);
         Parser parser= new Parser();
         parser.parse(file);
