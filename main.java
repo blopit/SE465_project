@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,7 +51,7 @@ public class main {
 
             while(it.hasNext()) {
                 String scope = it.next();
-                if(f1Occurrences.contains(it.next())) {
+                if(f1Occurrences.contains(scope)) {
                     f1MissingF2.remove(scope);
                     sup++;
                 } else {
@@ -95,38 +96,30 @@ public class main {
     }
 
     public static void main(String[] args) {
-        String a = "A";
-        String b = "B";
-        String c = "C";
-        String d = "D";
-        String scope1 = "scope1";
-        String scope2 = "scope2";
-        String scope3 = "scope3";
-        String scope4 = "scope4";
-        String scope5 = "scope5";
-        String scope6 = "scope6";
 
-        functions.add(a);
-        functions.add(b);
-        functions.add(c);
-        functions.add(d);
+    	String filestr = "";
+		if (args.length == 1) {
+			filestr = args[0];
+		} else if (args.length == 3) {
+			filestr = args[0];
+		} else {
+			return;
+		}
 
-        fOccurrences.put(a.hashCode(), new HashSet<String>());
-        fOccurrences.put(b.hashCode(), new HashSet<String>());
-        fOccurrences.put(c.hashCode(), new HashSet<String>());
-        fOccurrences.put(d.hashCode(), new HashSet<String>());
+		if (CallGraph.generate("opt", filestr) != CallGraph.Status.OK) {
+			CallGraph.generate("/usr/local/Cellar/llvm/3.6.2/bin/opt", filestr);
+		}
+		;
 
-        fOccurrences.get(a.hashCode()).add(scope1);
-        fOccurrences.get(a.hashCode()).add(scope2);
-        fOccurrences.get(a.hashCode()).add(scope3);
-        fOccurrences.get(a.hashCode()).add(scope5);
-
-        fOccurrences.get(b.hashCode()).add(scope1);
-        fOccurrences.get(b.hashCode()).add(scope3);
-        fOccurrences.get(b.hashCode()).add(scope4);
-        fOccurrences.get(b.hashCode()).add(scope5);
-        fOccurrences.get(b.hashCode()).add(scope6);
-
+		// Change the filename to any textfile location to test the parser
+		String directory = System.getProperty("user.dir");
+		String fileName = directory + "/main.txt";
+		File file = new File(fileName);
+		Parser parser = new Parser();
+		parser.parse(file);
+		fOccurrences = parser.getFOccurrences();
+		functions = parser.getFunctions();
+		
         for(int i = 0; i < functions.size(); i++) {
             String function1 = functions.get(i);
             int f1 = function1.hashCode();
