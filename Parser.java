@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,16 +35,6 @@ public class Parser {
                 }
                 if (line.contains("Call graph node")) {
                     //skey is the currentscope
-                    if (sKey.equals("functions"))
-                    {
-                        //turn it into an arraylist once
-                        Iterator<String> it = hashFunctions.iterator();
-                        while(it.hasNext())
-                        {
-                            //add all unique values in hashmap to arraylist
-                            functions.add(it.next());
-                        }
-                    }
                     Pattern pattern = Pattern.compile("'(.*?)'");
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
@@ -59,7 +48,11 @@ public class Parser {
                         functionName = Tokens[Tokens.length - 1];
                         functionName = functionName.replace("'", "");
                         //add to hashset to prevent duplicates
-                        hashFunctions.add(functionName);
+                        if (!hashFunctions.contains(functionName))
+                        {
+                            functions.add(functionName);
+                            hashFunctions.add(functionName);
+                        }
                     }
                     else
                     {
@@ -97,7 +90,7 @@ public class Parser {
             e.printStackTrace();
         }
     }
-    /*
+/*
     public static void main(String[] args) {
         //Change the filename to any textfile location to test the parser
         String directory = System.getProperty("user.dir");
@@ -106,6 +99,5 @@ public class Parser {
         Parser parser= new Parser();
         parser.parse(file);
     }
-    */
-
+*/
 }
