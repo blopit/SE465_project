@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,20 +10,20 @@ import java.util.regex.Pattern;
  * Created by Jude on 3/24/2016.
  */
 public class Parser {
-	HashMap<Integer,HashSet<String>> FOccurrences = new HashMap<Integer,HashSet<String>>();
-	ArrayList<String> functions = new ArrayList<String>();
-    
+    HashMap<Integer,HashSet<String>> FOccurrences = new HashMap<Integer,HashSet<String>>();
+    ArrayList<String> functions = new ArrayList<String>();
+
     public HashMap<Integer, HashSet<String>> getFOccurrences() {
-		return FOccurrences;
-	}
-	public ArrayList<String> getFunctions() {
-		return functions;
-	}
-	public void parse(File file) {
+        return FOccurrences;
+    }
+    public ArrayList<String> getFunctions() {
+        return functions;
+    }
+    public void parse(File file) {
         FOccurrences = new HashMap<Integer,HashSet<String>>();
         functions = new ArrayList<String>();
-		//temp HashSet
-		HashSet<String> hashFunctions = new HashSet<String>();
+        //temp HashSet
+        HashSet<String> hashFunctions = new HashSet<String>();
         try {
             BufferedReader lines = new BufferedReader(new FileReader(file));
             String line;
@@ -35,15 +36,19 @@ public class Parser {
                 }
                 if (line.contains("Call graph node")) {
                     //skey is the currentscope
+                    if (sKey.equals("functions"))
+                    {
+                        //turn it into an arraylist once
+                        Iterator<String> it = hashFunctions.iterator();
+                        while(it.hasNext())
+                        {
+                            //add all unique values in hashmap to arraylist
+                            functions.add(it.next());
+                        }
+                    }
                     Pattern pattern = Pattern.compile("'(.*?)'");
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
-						Iterator<String> it = hashFunctions.iterator();
-                        while(it.hasNext())
-                        {
-							//add all unique values in hashmap to arraylist
-                            functions.add(it.next());
-                        }
                         sKey = (matcher.group(0));
                         sKey = sKey.replace("'","");
                     }
@@ -53,7 +58,7 @@ public class Parser {
                         String[] Tokens = line.split("\\s+");
                         functionName = Tokens[Tokens.length - 1];
                         functionName = functionName.replace("'", "");
-						//add to hashset to prevent duplicates
+                        //add to hashset to prevent duplicates
                         hashFunctions.add(functionName);
                     }
                     else
@@ -92,13 +97,15 @@ public class Parser {
             e.printStackTrace();
         }
     }
-    /*public static void main(String[] args) {
+    /*
+    public static void main(String[] args) {
         //Change the filename to any textfile location to test the parser
         String directory = System.getProperty("user.dir");
         String fileName = directory + "\\main.txt";
         File file = new File(fileName);
         Parser parser= new Parser();
         parser.parse(file);
-    }*/
+    }
+    */
 
 }
