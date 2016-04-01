@@ -21,6 +21,8 @@ public class Parser {
 	public void parse(File file) {
         FOccurrences = new HashMap<Integer,HashSet<String>>();
         functions = new ArrayList<String>();
+		//temp HashSet
+		HashSet<String> hashFunctions = new HashSet<String>();
         try {
             BufferedReader lines = new BufferedReader(new FileReader(file));
             String line;
@@ -36,6 +38,12 @@ public class Parser {
                     Pattern pattern = Pattern.compile("'(.*?)'");
                     Matcher matcher = pattern.matcher(line);
                     if (matcher.find()) {
+						Iterator<String> it = hashFunctions.iterator();
+                        while(it.hasNext())
+                        {
+							//add all unique values in hashmap to arraylist
+                            functions.add(it.next());
+                        }
                         sKey = (matcher.group(0));
                         sKey = sKey.replace("'","");
                     }
@@ -45,7 +53,8 @@ public class Parser {
                         String[] Tokens = line.split("\\s+");
                         functionName = Tokens[Tokens.length - 1];
                         functionName = functionName.replace("'", "");
-                        functions.add(functionName);
+						//add to hashset to prevent duplicates
+                        hashFunctions.add(functionName);
                     }
                     else
                     {
