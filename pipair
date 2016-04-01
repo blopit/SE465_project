@@ -1,0 +1,5 @@
+#!/bin/bash
+unset JAVA_TOOL_OPTIONS
+export JAVA_TOOL_OPTIONS="-Xmx128m"
+javac -d . -cp .. main.java
+java -Xms128m -Xmx128m main $1 $2 $3

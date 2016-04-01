@@ -15,18 +15,22 @@ public class CallGraph {
 		String[] command = new String[] { cmnd, "-print-callgraph", file };
 		try {
 			// build command
-			Process procbuilder = new ProcessBuilder(command).start();
+			ProcessBuilder procbuilder = new ProcessBuilder(command);
+			procbuilder.redirectErrorStream(true);
+			Process process = procbuilder.start();
+			
 			// read output from error stream
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					procbuilder.getErrorStream()));
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			BufferedReader reader = new BufferedReader(isr);
 			StringBuilder builder = new StringBuilder();
-
-			// iterate and append though all line of output
-			String line = null;
-			while ((line = reader.readLine()) != null) {
+			
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 				builder.append(line);
 				builder.append(System.getProperty("line.separator"));
+				//System.out.println(line + " : " + builder.capacity());
 			}
+			process.waitFor();
+			isr.close();
 			String result = builder.toString();
 
 			// print to file
@@ -40,6 +44,9 @@ public class CallGraph {
 		} catch (IOException e) {
 			//e.printStackTrace();
 			return Status.ERR_OUT;
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 		return Status.OK;

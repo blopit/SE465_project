@@ -8,8 +8,8 @@ import java.util.Iterator;
  * Created by ChrisKatigbak on 2016-03-24.
  */
 public class main {
-    final static int T_SUPPORT = 3;
-    final static double T_CONFIDENCE = 0.65;
+    static int T_SUPPORT;
+    static double T_CONFIDENCE;
 
     //Scopes where f1 is called but f2 is not
     static HashSet<String> f1MissingF2;
@@ -74,23 +74,23 @@ public class main {
         double f1Confidence = (double) pairSupport / (double) f1Support;
         double f2Confidence = (double) pairSupport / (double) f2Support;
 
-        if(f1Confidence >= T_CONFIDENCE) {
+        if(f1Confidence >= T_CONFIDENCE && pairSupport >= T_SUPPORT) {
             Iterator<String> it = f1MissingF2.iterator();
 
             while(it.hasNext()) {
                 System.out.println("bug: " + function1 + " in " + it.next() +
                         ", pair: (" + function1 + ", " + function2 +
-                        "), support: " + pairSupport + ", confidence: " + f1Confidence*100 + "%");
+                        "), support: " + pairSupport + ", confidence: " + String.format( "%.2f", f1Confidence*100 ) + "%");
             }
         }
 
-        if(f2Confidence >= T_CONFIDENCE) {
+        if(f2Confidence >= T_CONFIDENCE && pairSupport >= T_SUPPORT) {
             Iterator<String> it = f2MissingF1.iterator();
 
             while(it.hasNext()) {
                 System.out.println("bug: " + function2 + " in " + it.next() +
                         ", pair: (" + function1 + ", " + function2 +
-                        "), support: " + pairSupport + ", confidence: " + f2Confidence*100 + "%");
+                        "), support: " + pairSupport + ", confidence: " + String.format( "%.2f", f2Confidence*100 ) + "%");
             }
         }
     }
@@ -100,8 +100,12 @@ public class main {
     	String filestr = "";
 		if (args.length == 1) {
 			filestr = args[0];
+			T_SUPPORT = 3;
+			T_CONFIDENCE = 0.65;
 		} else if (args.length == 3) {
 			filestr = args[0];
+			T_SUPPORT = Integer.parseInt(args[1]);
+			T_CONFIDENCE = Double.parseDouble(args[2])/100.0;
 		} else {
 			return;
 		}
@@ -119,7 +123,7 @@ public class main {
 		parser.parse(file);
 		fOccurrences = parser.getFOccurrences();
 		functions = parser.getFunctions();
-		
+
         for(int i = 0; i < functions.size(); i++) {
             String function1 = functions.get(i);
             int f1 = function1.hashCode();
