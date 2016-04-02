@@ -63,7 +63,14 @@ public class Parser {
                         functionName = temp[temp.length - 1];
                         //remove the quotes
                         functionName = functionName.replace("'", "");
+                        if (!hashFunctions.contains(functionName))
+                        {
+                            functions.add(functionName);
+                            FOccurrences.put(functionName.hashCode(), new HashSet<String>());
+                            hashFunctions.add(functionName);
+                        }
                     }
+
                     if (!sKey.equals("functions")&& sKey !=null)
                     {
                         if (FOccurrences.containsKey(functionName.hashCode()))
