@@ -95,6 +95,40 @@ public class main {
         }
     }
 
+    public static void expand() {
+        //create a clone of the fOccurrences map that will be read by this function
+        HashMap<Integer, HashSet<String>> fOccurrencesClone = (HashMap<Integer, HashSet<String>>) fOccurrences.clone();
+
+        for(int i = 0; i < functions.size(); i++) {
+            String function = functions.get(i);
+            int f = function.hashCode();
+
+            //clone the hash set of the the scopes f occurs in, which will be read
+            //the original may be modified
+            HashSet<String> occurrences = (HashSet<String>) fOccurrences.get(f).clone();
+            fOccurrencesClone.put(f, occurrences);
+
+            //Iterate through all scopes in which f occurs
+            Iterator<String> it = occurrences.iterator();
+            while(it.hasNext()) {
+                String fScope = it.next();
+
+                //is fScope called in any other scopes?
+                HashSet<String> expandedOcurrences = fOccurrencesClone.get(fScope.hashCode());
+                if(expandedOcurrences != null) {
+
+                    //add all scopes that call fScope to the hash set of scopes that call f
+                    Iterator<String> jt = expandedOcurrences.iterator();
+                    while(jt.hasNext()) {
+                        String y = jt.next();
+                        fOccurrences.get(f).add(y);
+                    }
+                }
+
+            }
+
+        }
+
     public static void main(String[] args) {
 
     	String filestr = "";
