@@ -51,6 +51,7 @@ public class Parser {
                         if (!hashFunctions.contains(functionName))
                         {
                             functions.add(functionName);
+                            FOccurrences.put(functionName.hashCode(), new HashSet<String>());
                             hashFunctions.add(functionName);
                         }
                     }
