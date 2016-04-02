@@ -10,6 +10,7 @@ import java.util.Iterator;
 public class main {
     static int T_SUPPORT;
     static double T_CONFIDENCE;
+    static int EXPAND;
 
     //Scopes where f1 is called but f2 is not
     static HashSet<String> f1MissingF2;
@@ -136,11 +137,19 @@ public class main {
 			filestr = args[0];
 			T_SUPPORT = 3;
 			T_CONFIDENCE = 0.65;
+            ExPAND = 0;
 		} else if (args.length == 3) {
 			filestr = args[0];
 			T_SUPPORT = Integer.parseInt(args[1]);
 			T_CONFIDENCE = Double.parseDouble(args[2])/100.0;
-		} else {
+            EXPAND = 0;
+		} else if (args.length == 4) {
+            filestr = args[0];
+            T_SUPPORT = Integer.parseInt(args[1]);
+            T_CONFIDENCE = Double.parseDouble(args[2])/100.0;
+            EXPAND = Integer.parseInt(args[3]);
+
+        } else {
 			return;
 		}
 
@@ -157,6 +166,10 @@ public class main {
 		parser.parse(file);
 		fOccurrences = parser.getFOccurrences();
 		functions = parser.getFunctions();
+
+        for(int h = 0; h < EXPAND; h++) {
+            expand();
+        }
 
         for(int i = 0; i < functions.size(); i++) {
             String function1 = functions.get(i);
