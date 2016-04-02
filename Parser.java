@@ -68,15 +68,16 @@ public class Parser {
                         if (FOccurrences.containsKey(functionName.hashCode()))
                         {
                             //add the current scope to the functionName
-                            //FOccurrences.get(functionName.hashCode()).add(sKey);
+                            FOccurrences.get(functionName.hashCode()).add(sKey);
                         }
                         else
                         {
-                            //FOccurrences.put(functionName.hashCode(), new HashSet<String>());
+                            FOccurrences.put(functionName.hashCode(), new HashSet<String>());
                         }
                     }
                 }
             }
+            /*
             for (int i = 0 ; i < functions.size();i++)
             {
                 System.out.println(functions.get(i));
@@ -85,6 +86,7 @@ public class Parser {
             {
                 System.out.println(key + " : "+ FOccurrences.get(key));
             }
+            */
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
