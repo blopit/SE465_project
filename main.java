@@ -17,10 +17,16 @@ public class main {
     //Scopes where f2 is called but f1 is not
     static HashSet<String> f2MissingF1;
 
+    //Map with the hash code of a function name as its key, and a hash set of the scopes in which the function is
+    //called as the value
     static HashMap<Integer, HashSet<String>> fOccurrences = new HashMap<Integer, HashSet<String>>();
+
+    //List of all functions in the graph
     static ArrayList<String> functions = new ArrayList<String>();
 
+    //Calculates Support(f1, f2), also fills f2Missingf1 and f1Missingf2 hash sets
     public static int support(Integer f1, Integer f2) {
+        //running tally for Support(f1, f2)
         int sup = 0;
         HashSet<String> f1Occurrences = fOccurrences.get(f1);
         HashSet<String> f2Occurrences = fOccurrences.get(f2);
@@ -30,6 +36,7 @@ public class main {
             return -1;
         }
 
+        //Iterate through the set of smaller size
         if(f1Occurrences.size() < f2Occurrences.size()) {
             Iterator<String> it = f1Occurrences.iterator();
             f1MissingF2 = new HashSet<String>();
@@ -39,6 +46,8 @@ public class main {
                 String scope = it.next();
                 if (f2Occurrences.contains(scope)) {
                     f2MissingF1.remove(scope);
+
+                    //increment support
                     sup++;
                 } else {
                     f1MissingF2.add(scope);
@@ -53,6 +62,8 @@ public class main {
                 String scope = it.next();
                 if(f1Occurrences.contains(scope)) {
                     f1MissingF2.remove(scope);
+
+                    //increment support
                     sup++;
                 } else {
                     f2MissingF1.add(scope);
@@ -63,6 +74,8 @@ public class main {
         return sup;
     }
 
+    //Calculates Confidence((function1, function2), function1) and Confidence((function1, function2), function2)
+    //and prints bugs if T_SUPPORT and T_CONFIDENCE are met
     public static void confidence(String function1, String function2) {
         Integer f1 = function1.hashCode();
         Integer f2 = function2.hashCode();
