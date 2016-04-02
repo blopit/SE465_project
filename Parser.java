@@ -63,25 +63,27 @@ public class Parser {
                         //remove the quotes
                         functionName = functionName.replace("'", "");
                     }
-
-                    if (FOccurrences.containsKey(functionName.hashCode()))
+                    if (!sKey.equals("functions")&& sKey !=null)
                     {
-                        //add the current scope to the functionName
-                        FOccurrences.get(functionName.hashCode()).add(sKey);
-                    }
-                    else
-                    {
-                        FOccurrences.put(functionName.hashCode(), new HashSet<String>());
+                        if (FOccurrences.containsKey(functionName.hashCode()))
+                        {
+                            //add the current scope to the functionName
+                            //FOccurrences.get(functionName.hashCode()).add(sKey);
+                        }
+                        else
+                        {
+                            //FOccurrences.put(functionName.hashCode(), new HashSet<String>());
+                        }
                     }
                 }
             }
             for (int i = 0 ; i < functions.size();i++)
             {
-                //System.out.println(functions.get(i));
+                System.out.println(functions.get(i));
             }
             for (Integer key: FOccurrences.keySet())
             {
-                //System.out.println(key + " : "+ FOccurrences.get(key));
+                System.out.println(key + " : "+ FOccurrences.get(key));
             }
         }
         catch (FileNotFoundException e) {
@@ -90,7 +92,7 @@ public class Parser {
             e.printStackTrace();
         }
     }
-/*
+    /*
     public static void main(String[] args) {
         //Change the filename to any textfile location to test the parser
         String directory = System.getProperty("user.dir");
@@ -99,5 +101,5 @@ public class Parser {
         Parser parser= new Parser();
         parser.parse(file);
     }
-*/
+    */
 }
